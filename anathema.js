@@ -3,7 +3,6 @@ const anathema = require("./build-tasks/config.js")
 
 // require('./build-tasks/styles.js')
 require('./build-tasks/scripts.js')
-require('./build-tasks/containers.js')
 
 var del = require('del')
 

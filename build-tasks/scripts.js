@@ -18,8 +18,9 @@ anathema.task("scripts", function (task) {
         { test: /\.tsx?$/, loader: "ts-loader" }
       ]
     },
+    target: 'node',
     output: {
-      filename: "examplerun.pkg.js",
+      filename: "ExampleServer.node.js",
       path: anathema.rootDirectory + '/' + staticOut,
     }
   }

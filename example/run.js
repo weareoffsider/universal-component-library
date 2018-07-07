@@ -1,3 +1,43 @@
+import {
+  UniversalComponentConfig,
+  UniversalComponentServer,
+} from '../src/UniversalComponentServer'
+const React = require('react')
+const ReactDOM = require('react-dom/server')
+
+
+const context = require.context('.', true)
+console.log(context)
+console.log(context.keys())
+const ucsConfig = new UniversalComponentConfig(
+  (path) => {
+    import(
+      './' + path
+    ).then((retrieved) => {
+      console.log(retrieved)
+    })
+  }
+)
+
+ucsConfig.addComponentRunner({
+  name: "react-components",
+  matcher: "**/*.react.tsx",
+  getTestDataPath: (path) => {
+    return path.replace(".react.", ".data.")
+  },
+  getTestCSSPath: (path) => {
+    return path.replace(".react.tsx", ".test.css")
+  },
+  getTestJSPath: (path) => {
+    return path.replace(".react.tsx", ".test.ts")
+  },
+})
+
+
+const ucsServer = new UniversalComponentServer(ucsConfig)
+ucsServer.runServer()
+
+console.log("BLAH")
 
 
 // import ComponentServer from './../src/main.js'
