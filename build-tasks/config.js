@@ -3,8 +3,8 @@ let anathema = new Anathema()
 
 anathema.config = {
   paths: {
+    src: 'src',
     exampleSrc: 'example',
-    serverSrc: 'server',
     staticOut: 'build/static',
     buildRoot: 'build',
     componentServerOut: 'build/component-server',

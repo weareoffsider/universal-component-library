@@ -33,13 +33,13 @@ anathema.task("styles", function (task) {
       },
       (file, out) => postcss([autoprefixer]).process(out.css, {from: undefined}),
       (file, out) => {
-        file.data = out.css
+        file.data = "export default `" + out.css + "`;"
         if (file.name == "Main.less") {
-          file.name = "ExampleApp.css"
+          file.name = "CSSExport.ts"
         } else {
           file.name = file.name.replace('.less', '.css')
         }
       }
     )
-    .output(staticOut)
+    .output(src)
 })

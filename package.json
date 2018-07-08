@@ -12,7 +12,11 @@
   },
   "devDependencies": {
     "anathema": "^0.1.1",
+    "autoprefixer": "^8.6.5",
     "del": "^3.0.0",
+    "less": "^3.5.3",
+    "less-plugin-lists": "^1.1.2",
+    "postcss": "^6.0.23",
     "ts-loader": "^4.4.2",
     "typescript": "^2.9.2",
     "webpack": "^4.15.1"

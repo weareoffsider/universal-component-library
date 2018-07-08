@@ -1,7 +1,7 @@
 const anathema = require("./build-tasks/config.js")
 // const mkdirp = require('mkdirp')
 
-// require('./build-tasks/styles.js')
+require('./build-tasks/styles.js')
 require('./build-tasks/scripts.js')
 
 var del = require('del')
@@ -30,7 +30,7 @@ let livereloadServer
 anathema.dashboard("default", function (dashboard) {
   dashboard.task(['clean'])
   dashboard.task(['scripts'])
-  // dashboard.watch(['styles', 'containers'])
+  dashboard.watch(['styles'])
   dashboard.monitor(['webpack'])
 })
 

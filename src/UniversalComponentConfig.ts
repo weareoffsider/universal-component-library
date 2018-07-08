@@ -1,4 +1,6 @@
 import {Minimatch} from 'minimatch'
+import {basename, dirname, sep} from 'path'
+import {uniq} from 'lodash'
 
 export interface UCSConfigEntry {
   name: string
@@ -18,6 +20,8 @@ export interface WebpackContext {
 
 export interface ComponentContentEntry {
   key: string
+  commonRoot: string
+  name: string
   data: {[key: string]: any}
   config: UCSConfigEntry
 }
@@ -36,8 +40,17 @@ export default class UniversalComponentConfig {
   }
 
   collectComponents () {
+    let allKeys: string[] = []
+    const keys = this.context.keys()
     this.configs.forEach((conf) => {
-      const keys = this.context.keys()
+      const mm = new Minimatch(conf.matcher)
+      const matched = keys.filter((key: string) => { 
+        return mm.match(key)
+      })
+      allKeys = allKeys.concat(matched)
+    })
+
+    this.configs.forEach((conf) => {
       const mm = new Minimatch(conf.matcher)
       const matched = keys.filter((key: string) => { 
         return mm.match(key)
@@ -52,9 +65,32 @@ export default class UniversalComponentConfig {
           data = {default: {}}
         }
 
-        this.contents[key] = {key, data, config: conf}
+        const pathComponents = uniq(dirname(key).split(sep))
+        let foundCommonRoot = false
+        console.log(pathComponents)
+
+        while (!foundCommonRoot && pathComponents.length > 0) {
+          const matchKey = pathComponents.join(sep)
+          foundCommonRoot = allKeys.some((testKey) => {
+            return (
+              testKey.indexOf(matchKey) == 0 &&
+              testKey !== key
+            )
+          })
+          if (!foundCommonRoot) {
+            pathComponents.pop()
+          }
+        }
+
+        this.contents[key] = {
+          key, data, config: conf,
+          commonRoot: pathComponents.join(sep),
+          name: basename(key),
+        }
       })
     })
+
+    console.log(this.contents)
   }
 
   addComponentRunner(config: UCSConfigEntry) {
