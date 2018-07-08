@@ -1,4 +1,4 @@
-export default {
+export const FirstTest = {
   "title": "First Page Type",
 }
 

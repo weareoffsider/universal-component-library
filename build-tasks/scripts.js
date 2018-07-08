@@ -19,6 +19,9 @@ anathema.task("scripts", function (task) {
       ]
     },
     target: 'node',
+    node: {
+      __dirname: false,
+    },
     output: {
       filename: "ExampleServer.node.js",
       path: anathema.rootDirectory + '/' + componentServerOut,
@@ -33,6 +36,11 @@ anathema.task("scripts", function (task) {
       rules: [
         { test: /\.tsx?$/, loader: "ts-loader" }
       ]
+    },
+    node: {
+      express: 'empty',
+      fs: 'empty',
+      net: 'empty',
     },
     output: {
       filename: "ExampleClient.pkg.js",

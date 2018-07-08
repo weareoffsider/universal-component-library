@@ -1,10 +1,10 @@
-import express from 'express'
 import {Minimatch} from 'minimatch'
 import React, {Component} from "react"
 import ReactDOMServer from 'react-dom/server'
 import UniversalComponentConfig from './UniversalComponentConfig'
-import ComponentList from './Chrome/ComponentList'
-import ComponentView from './Chrome/ComponentView'
+import HTMLWrapper from './ui/HTMLWrapper'
+import ComponentList from './ui/ComponentList'
+import ComponentView from './ui/ComponentView'
 import {find} from 'lodash'
 
 const COMPONENT_PATH = /(.*)$/
@@ -12,12 +12,17 @@ export default class UniversalComponentServer {
   private app: any
 
   constructor(
-    public config: UniversalComponentConfig
+    public config: UniversalComponentConfig,
+    public scripts: string[] = [],
+    public stylesheets: string[] = []
   ) {
     config.collectComponents()
     const express = require('express')
     this.app = express()
-    console.log(config.contents)
+  }
+  
+  configApp (cb: (app: any) => void) {
+    cb(this.app)
   }
 
   runServer() {
@@ -27,12 +32,21 @@ export default class UniversalComponentServer {
         { contents: this.config.contents }
       )
 
-      const html = ReactDOMServer.renderToStaticMarkup(element)
+      const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(
+          HTMLWrapper,
+          {
+            scripts: this.scripts,
+            stylesheets: this.stylesheets,
+            title: "Component Library",
+          },
+          element
+        )
+      )
       res.send(html)
     })
     this.app.get(COMPONENT_PATH, (req: any, res: any) => {
       const path = req.path
-      console.log(path)
 
       const keys = Object.keys(this.config.contents)
       const activeKey = find(keys, (k) => req.path.indexOf(k.slice(1)) != -1)
@@ -47,14 +61,26 @@ export default class UniversalComponentServer {
           { 
             contents: this.config.contents,
             componentEntry: this.config.contents[activeKey],
+            activeKey,
             context: this.config.context,
           }
         )
 
-        const html = ReactDOMServer.renderToStaticMarkup(element)
+        const html = ReactDOMServer.renderToStaticMarkup(
+          React.createElement(
+            HTMLWrapper,
+            {
+              scripts: this.scripts,
+              stylesheets: this.stylesheets,
+              title: "Component Library",
+            },
+            element
+          )
+        )
         res.send(html)
       }
     })
+
     this.app.listen(3000, () => console.log('Example app listening on port 3000!'))
   }
 

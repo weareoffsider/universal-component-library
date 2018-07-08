@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "node",
     "jsx": "react",
     "experimentalDecorators": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "target": "es6",
@@ -12,8 +15,12 @@
       "dom"
     ]
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
-    "work_templates"
+    "work_templates",
+    "node_modules"
   ]
 }
 

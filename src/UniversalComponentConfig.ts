@@ -1,14 +1,13 @@
 import {Minimatch} from 'minimatch'
 
-
 export interface UCSConfigEntry {
   name: string
   matcher: string
   getTestDataPath: (pth: string) => string
   getTestCSSPath: (pth: string) => string
   getTestJSPath: (pth: string) => string
-  renderServer: (component: any, data: any, pth: string) => string
-  renderClient: (container: HTMLElement, component: any, data: any, pth: string) => string
+  renderServer: (component: any, data: any, pth?: string) => string
+  renderClient: (container: HTMLElement, component: any, data: any, pth?: string) => string
 }
 
 export interface WebpackContext {

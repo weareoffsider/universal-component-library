@@ -30,11 +30,12 @@ ucsConfig.addComponentRunner({
     const ReactDOM = require('react-dom')
     const React = require('react')
 
-    return ReactDOM.render(
+    return ReactDOM.hydrate(
       React.createElement(componentModule.default, data),
       container
     )
   }
 })
+
 
 export default ucsConfig
