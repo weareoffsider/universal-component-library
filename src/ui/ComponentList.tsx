@@ -2,9 +2,11 @@ import React, {Component} from "react"
 import DOM from 'react-dom-factories'
 import {ComponentContents, ComponentContentEntry} from '../UniversalComponentConfig'
 import {groupBy} from 'lodash'
+import {squiggleIcon, browserCollapseIcon} from './svg'
 
 interface ComponentListProps {
   contents: ComponentContents
+  showTestLink?: boolean
   activeKey?: string
 }
 
@@ -13,7 +15,7 @@ export default class ComponentList extends Component<ComponentListProps, {}> {
   static displayName = "ComponentList"
 
   render () {
-    const {contents, activeKey} = this.props
+    const {contents, showTestLink, activeKey} = this.props
 
     const contentsGrouped = groupBy(
       Object.keys(contents).map((k) => contents[k]),
@@ -24,7 +26,7 @@ export default class ComponentList extends Component<ComponentListProps, {}> {
 
     const groupRenders = headers.map((commonRoot: string) => { 
       const entries = contentsGrouped[commonRoot]
-      return <section className="ComponentServerNav__section">
+      return <section key={commonRoot} className="ComponentServerNav__section">
         <h4 className="ComponentServerNav__sectionHeader">{commonRoot}</h4>
         <ul className="ComponentServerNav__sectionLinks">
           {entries.map((c) => {
@@ -47,7 +49,21 @@ export default class ComponentList extends Component<ComponentListProps, {}> {
       </section>
     })
 
+    const link = activeKey
+      ? activeKey[0] == '.' ? activeKey.slice(1) : activeKey
+      : ""
+
     return <div className="ComponentServerNav">
+      <header className="ComponentServerNav__header">
+        <span>{squiggleIcon("ComponentServerNav__headerIcon")}</span>
+        <span className="ComponentServerNav__headerTitle">Component Library</span>
+        {showTestLink && <a
+          className="ComponentServerNav__testModeLink"
+          href={link + "/__allTest__"}
+        >
+          {browserCollapseIcon()}
+        </a>}
+      </header>
       <main className="ComponentServerNav__bd">
         {groupRenders}
       </main>

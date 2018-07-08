@@ -7,11 +7,11 @@ export default class UniversalComponentClient {
     config.collectComponents()
 
     document.addEventListener('DOMContentLoaded', function (event) {
-      const componentView = document.querySelector(".ComponentServerRenderPane")
+      const componentView = document.querySelector(".RenderAllContainer")
 
       if (!componentView) { return } // on index
 
-      const componentRenders = document.querySelectorAll(".RenderComponent__wrapper")
+      const componentRenders = document.querySelectorAll(".RenderContainer")
       const componentKey = componentView.getAttribute('data-component-key')
       const componentModule = config.context(componentKey)
       const componentEntry = config.contents[componentKey]

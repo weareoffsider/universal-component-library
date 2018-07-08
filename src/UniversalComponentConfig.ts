@@ -5,9 +5,7 @@ import {uniq} from 'lodash'
 export interface UCSConfigEntry {
   name: string
   matcher: string
-  getTestDataPath: (pth: string) => string
-  getTestCSSPath: (pth: string) => string
-  getTestJSPath: (pth: string) => string
+  getTestData: (pth: string) => {[key: string]: any}
   renderServer: (component: any, data: any, pth?: string) => string
   renderClient: (container: HTMLElement, component: any, data: any, pth?: string) => string
 }
@@ -57,17 +55,10 @@ export default class UniversalComponentConfig {
       })
 
       matched.forEach((key) => {
-        const dataPath = conf.getTestDataPath(key)
-        let data: any
-        try {
-          data = this.context(dataPath)
-        } catch (e) {
-          data = {default: {}}
-        }
+        const data = conf.getTestData(key)
 
         const pathComponents = uniq(dirname(key).split(sep))
         let foundCommonRoot = false
-        console.log(pathComponents)
 
         while (!foundCommonRoot && pathComponents.length > 0) {
           const matchKey = pathComponents.join(sep)
@@ -89,8 +80,6 @@ export default class UniversalComponentConfig {
         }
       })
     })
-
-    console.log(this.contents)
   }
 
   addComponentRunner(config: UCSConfigEntry) {

@@ -9,14 +9,20 @@ const ucsConfig = new UniversalComponentConfig(context)
 ucsConfig.addComponentRunner({
   name: "react-components",
   matcher: "./**/*.react.tsx",
-  getTestDataPath: (path) => {
-    return path.replace(".react.tsx", ".data.ts")
-  },
-  getTestCSSPath: (path) => {
-    return path.replace(".react.tsx", ".test.css")
-  },
-  getTestJSPath: (path) => {
-    return path.replace(".react.tsx", ".test.ts")
+  getTestData: (path) => {
+    const keys = context.keys()
+    const testPaths = [
+      path.replace(".react.tsx", ".data.tsx"),
+      path.replace(".react.tsx", ".data.ts"),
+    ]
+
+    for (let i = 0; i < testPaths.length; i++) {
+      let dataPath = testPaths[i]
+      if (keys.indexOf(dataPath) != -1) {
+        return context(dataPath)
+      }
+    }
+    return {default: {}}
   },
   renderServer: (componentModule, data) => {
     const ReactDOMServer = require('react-dom/server')
@@ -26,7 +32,7 @@ ucsConfig.addComponentRunner({
       React.createElement(componentModule.default, data)
     )
   },
-  renderClient: (container, componentModule, data) => {
+  renderClient: (container, componentModule, data, path) => {
     const ReactDOM = require('react-dom')
     const React = require('react')
 

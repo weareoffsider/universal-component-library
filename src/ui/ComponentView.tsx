@@ -6,12 +6,14 @@ import {
   WebpackContext,
 } from '../UniversalComponentConfig'
 import ComponentList from './ComponentList'
+import {browserExpandIcon} from './svg'
 
 interface ComponentViewProps {
   contents: ComponentContents
   componentEntry: ComponentContentEntry
   activeKey: string
   context: WebpackContext
+  activeDataKey?: string
 }
 
 
@@ -23,16 +25,49 @@ export default class ComponentView extends Component<ComponentViewProps, {}> {
       contents,
       componentEntry,
       context,
-      activeKey
+      activeKey,
+      activeDataKey,
     } = this.props
 
+    let testMode = false
     const keys = Object.keys(contents)
-    const dataKeys = Object.keys(componentEntry.data)
+    let dataKeys = Object.keys(componentEntry.data)
+
+    if (dataKeys.indexOf(activeDataKey) != -1) {
+      testMode = true
+      dataKeys = dataKeys.filter((k) => activeDataKey == k)
+    } else if (activeDataKey == '__allTest__') {
+      testMode = true
+    }
+
     const link = activeKey[0] == '.' ? activeKey.slice(1) : activeKey
 
+    if (testMode) {
+      return <Fragment>
+        <a className="ComponentServer__RemoveTestMode" href={link}>
+          <span>{browserExpandIcon("ComponentServer__RemoveTestModeIcon")}</span>
+          <span className="ComponentServer__RemoveTestModeLabel">{"Show Component Browser"}</span>
+        </a>
+        <div className="RenderAllContainer" data-component-key={activeKey}>
+          {dataKeys.map((dataKey) => {
+            const componentModule = context(componentEntry.key)
+            const stringRender = componentEntry.config.renderServer(
+              componentModule, componentEntry.data[dataKey], componentEntry.key
+            )
+
+            return <div
+              data-props-key={dataKey}
+              className="RenderContainer"
+              dangerouslySetInnerHTML={{__html: stringRender}}
+            />
+          })}
+        </div>
+      </Fragment>
+    }
+
     return <Fragment>
-      <ComponentList contents={contents} activeKey={activeKey} />
-      <div className="ComponentServerRenderPane" data-component-key={activeKey}>
+      <ComponentList showTestLink contents={contents} activeKey={activeKey} />
+      <div className="RenderAllContainer ComponentServerRenderPane" data-component-key={activeKey}>
         {dataKeys.map((dataKey) => {
           const componentModule = context(componentEntry.key)
           const stringRender = componentEntry.config.renderServer(
@@ -45,7 +80,7 @@ export default class ComponentView extends Component<ComponentViewProps, {}> {
             </h1>
             <div
               data-props-key={dataKey}
-              className="RenderComponent__wrapper"
+              className="RenderContainer RenderComponent__wrapper"
               dangerouslySetInnerHTML={{__html: stringRender}}
             />
           </div>

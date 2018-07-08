@@ -7,14 +7,20 @@ import ComponentList from './ui/ComponentList'
 import ComponentView from './ui/ComponentView'
 import {find} from 'lodash'
 
+interface ServerOptions {
+  scripts?: string[]
+  stylesheets?: string[]
+  head?: string
+  footer?: string
+}
+
 const COMPONENT_PATH = /(.*)$/
 export default class UniversalComponentServer {
   private app: any
 
   constructor(
     public config: UniversalComponentConfig,
-    public scripts: string[] = [],
-    public stylesheets: string[] = []
+    public options: ServerOptions = {}
   ) {
     config.collectComponents()
     const express = require('express')
@@ -25,7 +31,15 @@ export default class UniversalComponentServer {
     cb(this.app)
   }
 
-  runServer() {
+  runServer(port: number = 3000) {
+    const wrapperProps = {
+      scripts: this.options.scripts,
+      stylesheets: this.options.stylesheets,
+      head: this.options.head,
+      footer: this.options.footer,
+      title: "Component Library",
+    }
+
     this.app.get('', (req: any, res: any) => {
       const element = React.createElement(
         ComponentList,
@@ -33,15 +47,7 @@ export default class UniversalComponentServer {
       )
 
       const html = ReactDOMServer.renderToStaticMarkup(
-        React.createElement(
-          HTMLWrapper,
-          {
-            scripts: this.scripts,
-            stylesheets: this.stylesheets,
-            title: "Component Library",
-          },
-          element
-        )
+        React.createElement(HTMLWrapper, wrapperProps, element)
       )
       res.send(html)
     })
@@ -62,26 +68,19 @@ export default class UniversalComponentServer {
             contents: this.config.contents,
             componentEntry: this.config.contents[activeKey],
             activeKey,
+            activeDataKey: variation,
             context: this.config.context,
           }
         )
 
         const html = ReactDOMServer.renderToStaticMarkup(
-          React.createElement(
-            HTMLWrapper,
-            {
-              scripts: this.scripts,
-              stylesheets: this.stylesheets,
-              title: "Component Library",
-            },
-            element
-          )
+          React.createElement(HTMLWrapper, wrapperProps, element)
         )
         res.send(html)
       }
     })
 
-    this.app.listen(3000, () => console.log('Example app listening on port 3000!'))
+    this.app.listen(port, () => console.log(`Component Server listening on port ${port}`))
   }
 
 }
