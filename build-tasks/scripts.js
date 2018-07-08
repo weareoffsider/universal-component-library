@@ -64,9 +64,12 @@ anathema.task("scripts", function (task) {
         )
       }
 
+      const start = Math.min(stats.stats.map((s) => s.startTime))
+      const end = Math.max(stats.stats.map((s) => s.endTime))
+
       scriptsMonitor.reportSuccess(
         stats.toString({colors: true}),
-        stats.endTime - stats.startTime
+        end - start
       )
     })
     task.stats.filesOutput.push("/" + componentServerOut + "/ExampleServer.node.js")
