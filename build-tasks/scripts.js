@@ -6,10 +6,10 @@ var path = require('path')
 const scriptsMonitor = anathema.monitor("webpack")
 
 anathema.task("scripts", function (task) {
-  const {exampleSrc, staticOut} = anathema.config.paths
-  const WEBPACK_CONFIG = {
+  const {exampleSrc, componentServerOut} = anathema.config.paths
+  const WEBPACK_CONFIG = [{
     mode: "development",
-    entry: anathema.rootDirectory + "/" + exampleSrc + "/run.js",
+    entry: anathema.rootDirectory + "/" + exampleSrc + "/server.ts",
     resolve: {
       extensions: [".ts", ".tsx", ".js"]
     },
@@ -21,9 +21,24 @@ anathema.task("scripts", function (task) {
     target: 'node',
     output: {
       filename: "ExampleServer.node.js",
-      path: anathema.rootDirectory + '/' + staticOut,
+      path: anathema.rootDirectory + '/' + componentServerOut,
     }
-  }
+  }, {
+    mode: "development",
+    entry: anathema.rootDirectory + "/" + exampleSrc + "/client.ts",
+    resolve: {
+      extensions: [".ts", ".tsx", ".js"]
+    },
+    module: {
+      rules: [
+        { test: /\.tsx?$/, loader: "ts-loader" }
+      ]
+    },
+    output: {
+      filename: "ExampleClient.pkg.js",
+      path: anathema.rootDirectory + '/' + componentServerOut,
+    }
+  }]
 
   const compiler = webpack(WEBPACK_CONFIG)
 
@@ -46,7 +61,8 @@ anathema.task("scripts", function (task) {
         stats.endTime - stats.startTime
       )
     })
-    task.stats.filesOutput.push("/" + staticOut + "/examplerun.pkg.js")
+    task.stats.filesOutput.push("/" + componentServerOut + "/ExampleServer.node.js")
+    task.stats.filesOutput.push("/" + componentServerOut + "/ExampleClient.pkg.js")
     return Promise.resolve(true)
   } else {
     return new Promise((resolve, reject) => {
@@ -64,9 +80,8 @@ anathema.task("scripts", function (task) {
         stats.compilation.fileDependencies.forEach((name) => {
           task.stats.filesMatched.push(name)
         })
-        task.stats.filesOutput.push("/" + staticOut + "/examplerun.pkg.js")
-
-
+        task.stats.filesOutput.push("/" + componentServerOut + "/ExampleServer.node.js")
+        task.stats.filesOutput.push("/" + componentServerOut + "/ExampleClient.pkg.js")
         resolve(stats)
       })
     })

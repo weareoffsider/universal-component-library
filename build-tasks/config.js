@@ -7,6 +7,7 @@ anathema.config = {
     serverSrc: 'server',
     staticOut: 'build/static',
     buildRoot: 'build',
+    componentServerOut: 'build/component-server',
     serverDist: 'build/dist/server',
   }
 }
