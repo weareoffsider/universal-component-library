@@ -1,6 +1,6 @@
 {
   "name": "universal-component-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Universal Component Library for developing UI Components",
   "main": "./node/index.js",
   "types": "./node/index.d.ts",
@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc --declaration",
+    "build-static": "node ./build/component-server/ExampleServer.node.js static",
     "anathema": "anathema --config anathema.js"
   },
   "devDependencies": {
@@ -36,10 +37,12 @@
     "webpack": "^4.15.1"
   },
   "dependencies": {
+    "@types/mkdirp": "^0.5.2",
     "express": "^4.16.3",
     "glob": "^7.1.2",
     "lodash": "^4.17.10",
     "minimatch": "^3.0.4",
+    "mkdirp": "^0.5.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-dom-factories": "^1.0.2"

@@ -9,11 +9,14 @@ import ucsConfig from './config'
 const ucsServer = new UniversalComponentServer(
   ucsConfig,
   {
-    scripts: ['/assets/ExampleClient.pkg.js'],
+    scripts: ['/ExampleClient.pkg.js'],
   }
 )
-ucsServer.configApp((app) => {
-  app.use('/assets', express.static(__dirname))
-})
-
-ucsServer.runServer()
+if (process.argv.indexOf('static') != -1) {
+  ucsServer.renderStatic(__dirname)
+} else {
+  ucsServer.configApp((app) => {
+    app.use('/', express.static(__dirname))
+  })
+  ucsServer.runServer()
+}
