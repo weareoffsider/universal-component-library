@@ -50,10 +50,8 @@ export default class UniversalComponentServer {
         { contents: this.config.contents }
       )
 
-      const html = ReactDOMServer.renderToStaticMarkup(
-        React.createElement(HTMLWrapper, wrapperProps, element)
-      )
-      res.send(html)
+      const elementHtml = ReactDOMServer.renderToStaticMarkup(element)
+      res.send(HTMLWrapper(wrapperProps, elementHtml))
     })
     this.app.get(COMPONENT_PATH, (req: any, res: any) => {
       const keys = Object.keys(this.config.contents)
@@ -75,10 +73,8 @@ export default class UniversalComponentServer {
           }
         )
 
-        const html = ReactDOMServer.renderToStaticMarkup(
-          React.createElement(HTMLWrapper, wrapperProps, element)
-        )
-        res.send(html)
+        const elementHtml = ReactDOMServer.renderToStaticMarkup(element)
+        res.send(HTMLWrapper(wrapperProps, elementHtml))
       }
     })
 
@@ -115,9 +111,8 @@ export default class UniversalComponentServer {
         )
 
         const outPath = path.join(root, 'index.html')
-        const indexHTML = ReactDOMServer.renderToStaticMarkup(
-          React.createElement(HTMLWrapper, wrapperProps, element)
-        )
+        const elementHtml = ReactDOMServer.renderToStaticMarkup(element)
+        const indexHTML = HTMLWrapper(wrapperProps, elementHtml)
         writeFile(outPath, indexHTML, resolve, reject)
       }),
     ].concat(
@@ -139,9 +134,8 @@ export default class UniversalComponentServer {
           )
 
           const outPath = path.join(root, activeKey, variation, 'index.html')
-          const html = ReactDOMServer.renderToStaticMarkup(
-            React.createElement(HTMLWrapper, wrapperProps, element)
-          )
+          const elementHtml = ReactDOMServer.renderToStaticMarkup(element)
+          const html = HTMLWrapper(wrapperProps, elementHtml)
 
           return new Promise((resolve, reject) => {
             writeFile(outPath, html, resolve, reject)

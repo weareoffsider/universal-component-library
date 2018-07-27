@@ -10,8 +10,11 @@ const ucsServer = new UniversalComponentServer(
   ucsConfig,
   {
     scripts: ['/ExampleClient.pkg.js'],
+    head: `<meta name="viewport" content="width=device-width, initial-scale=1">`,
+    footer: `<footer></footer>`,
   }
 )
+
 if (process.argv.indexOf('static') != -1) {
   ucsServer.renderStatic(__dirname)
 } else {

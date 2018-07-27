@@ -8,30 +8,29 @@ interface HTMLWrapperProps {
   head: string
   footer: string
   title: string
-  children: any
 }
 
 
 
-export default function HTMLWrapper(props: HTMLWrapperProps) {
+export default function HTMLWrapper(props: HTMLWrapperProps, elementHtml: string) {
   const {head = "", footer = "", stylesheets = [], scripts = []} = props
 
-  return <html style={{margin: 0, padding: 0}}>
+  return `<html style="margin: 0; padding: 0;">
     <head>
       <meta charSet="utf-8" />
-      <title>{props.title}</title>
-      {stylesheets.map((url) => {
-        return <link key={url} rel="stylesheet" href={url} />
-      })}
-      <style dangerouslySetInnerHTML={{__html: allStyle}} />
+      <title>${props.title}</title>
+      ${stylesheets.map((url) => {
+        return '<link rel="stylesheet" href="' + url + '" />'
+      }).join('\n')}
+      <style>${allStyle}</style>
+      ${head}
     </head>
-    <body style={{margin: 0, padding: 0}}>
-      <div dangerouslySetInnerHTML={{__html: head}} />
-      {props.children}
-      {scripts.map((url) => {
-        return <script key={url} type="text/javascript" src={url}></script>
-      })}
-      <div dangerouslySetInnerHTML={{__html: footer}} />
+    <body style="margin: 0; padding: 0;">
+      ${elementHtml}
+      ${scripts.map((url) => {
+        return '<script type="text/javascript" src="' +url+ '"></script>'
+      }).join('\n')}
+      ${footer}
     </body>
-  </html>
+  </html>`
 }
