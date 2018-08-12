@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import DOM from 'react-dom-factories'
 import {ComponentContents, ComponentContentEntry} from '../UniversalComponentConfig'
-import {groupBy} from 'lodash'
+import groupBy from 'lodash/groupBy'
 import {squiggleIcon, browserCollapseIcon} from './svg'
 
 interface ComponentListProps {

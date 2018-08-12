@@ -1,6 +1,6 @@
 import {Minimatch} from 'minimatch'
 import {basename, dirname, sep} from 'path'
-import {uniq} from 'lodash'
+import uniq from 'lodash/uniq'
 
 export interface UCSConfigEntry {
   name: string
