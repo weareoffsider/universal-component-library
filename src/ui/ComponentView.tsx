@@ -68,6 +68,11 @@ export default class ComponentView extends Component<ComponentViewProps, {}> {
     return <Fragment>
       <ComponentList showTestLink contents={contents} activeKey={activeKey} />
       <div className="RenderAllContainer ComponentServerRenderPane" data-component-key={activeKey}>
+        <nav className="RenderContents">
+          {dataKeys.map((dataKey) => {
+            return <a href={link + "/" + dataKey}>{dataKey}</a>
+          })}
+        </nav>
         {dataKeys.map((dataKey) => {
           const componentModule = context(componentEntry.key)
           const stringRender = componentEntry.config.renderServer(

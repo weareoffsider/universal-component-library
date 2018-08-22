@@ -117,6 +117,21 @@ body {
   margin: 0;
   padding: 16px 15px 15px 15px;
 }
+.RenderContents {
+  font-family: Karla, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: normal;
+  color: inherit;
+  font-size: 16px;
+  margin: 0;
+  padding: 15px 15px 15px 15px;
+  border-bottom: 1px solid #eee;
+}
+.RenderContents a {
+  margin-right: 20px;
+}
 .RenderComponent {
   border-top: 1px solid #eee;
 }
